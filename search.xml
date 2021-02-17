@@ -461,4 +461,211 @@
         <category>PAT</category>
       </categories>
   </entry>
+  <entry>
+    <title>PAT-B1020 月饼</title>
+    <url>/2021/02/08/PAT-B1020-%E6%9C%88%E9%A5%BC/</url>
+    <content><![CDATA[<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>月饼是中国人在中秋佳节时吃的一种传统食品，不同地区有许多不同风味的月饼。现给定所有种类月饼的库存量、总售价、以及市场的最大需求量，请你计算可以获得的最大收益是多少。</p>
+<p>注意：销售时允许取出一部分库存。样例给出的情形是这样的：假如我们有 3 种月饼，其库存量分别为 18、15、10 万吨，总售价分别为 75、72、45 亿元。如果市场的最大需求量只有 20 万吨，那么我们最大收益策略应该是卖出全部 15 万吨第 2 种月饼、以及 5 万吨第 3 种月饼，获得 72 + 45/2 = 94.5（亿元）。</p>
+<p>输入格式：</p>
+<p>每个输入包含一个测试用例。每个测试用例先给出一个不超过 1000 的正整数 <em>N</em> 表示月饼的种类数、以及不超过 500（以万吨为单位）的正整数 <em>D</em> 表示市场最大需求量。随后一行给出 <em>N</em> 个正数表示每种月饼的库存量（以万吨为单位）；最后一行给出 <em>N</em> 个正数表示每种月饼的总售价（以亿元为单位）。数字间以空格分隔。</p>
+<p>输出格式：</p>
+<p>对每组测试用例，在一行中输出最大收益，以亿元为单位并精确到小数点后 2 位。</p>
+<p>输入样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">3 20</span><br><span class="line">18 15 10</span><br><span class="line">75 72 45</span><br></pre></td></tr></table></figure>
+<p>输出样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">94.50</span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ul>
+<li>使用结构体分别存储月饼的库存,售价,单价。按照单价递减的顺序排序后，计算收益。</li>
+</ul>
+<h2 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Mooncake</span>&#123;</span></span><br><span class="line">    <span class="keyword">double</span> mount;<span class="comment">//库存</span></span><br><span class="line">    <span class="keyword">double</span> price;<span class="comment">//售价</span></span><br><span class="line">    <span class="keyword">double</span> per;  <span class="comment">//单价</span></span><br><span class="line">&#125;mooncake[<span class="number">1010</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(Mooncake a,Mooncake b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(a.per!=b.per) <span class="keyword">return</span> a.per&gt;b.per;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,require;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d %d&quot;</span>,&amp;n,&amp;require);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%lf&quot;</span>,&amp;mooncake[i].mount);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%lf&quot;</span>,&amp;mooncake[i].price);</span><br><span class="line">        mooncake[i].per=mooncake[i].price/mooncake[i].mount;</span><br><span class="line">    &#125;</span><br><span class="line">    sort(mooncake,mooncake+n,cmp);</span><br><span class="line">    <span class="keyword">double</span> earnings=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(require&gt;mooncake[i].mount)&#123;</span><br><span class="line">            require=require-mooncake[i].mount;</span><br><span class="line">            earnings+=mooncake[i].price;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            earnings+=require*mooncake[i].per;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%.2lf&quot;</span>,earnings);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>PAT</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>PAT-B1021 个位数统计</title>
+    <url>/2021/02/08/PAT-B1021-%E4%B8%AA%E4%BD%8D%E6%95%B0%E7%BB%9F%E8%AE%A1/</url>
+    <content><![CDATA[<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定一个 <em>k</em> 位整数 <em>N</em>，请编写程序统计每种不同的个位数字出现的次数。例如：给定 <em>N</em>=100311，则有 2 个 0，3 个 1，和 1 个 3。</p>
+<p>输入格式：</p>
+<p>每个输入包含 1 个测试用例，即一个不超过 1000 位的正整数 <em>N</em>。</p>
+<p>输出格式：</p>
+<p>对 <em>N</em> 中每一种不同的个位数字，以 <code>D:M</code> 的格式在一行中输出该位数字 <code>D</code> 及其在 <em>N</em> 中出现的次数 <code>M</code>。要求按 <code>D</code> 的升序输出。</p>
+<p>输入样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">100311</span><br></pre></td></tr></table></figure>
+<p>输出样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0:2</span><br><span class="line">1:3</span><br><span class="line">3:1</span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ul>
+<li>遍历字符串，使用数组统计每种不同的个位数字出现的次数。</li>
+</ul>
+<h2 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> number[<span class="number">10</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> str[<span class="number">1001</span>];</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>,str);</span><br><span class="line">    <span class="keyword">int</span> len=<span class="built_in">strlen</span>(str);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;len;i++)&#123;</span><br><span class="line">        <span class="keyword">int</span> temp=(<span class="keyword">int</span>)(str[i]-<span class="string">&#x27;0&#x27;</span>);</span><br><span class="line">        number[temp]++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(number[i]!=<span class="number">0</span>) count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(number[i]!=<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%d:%d&quot;</span>,i,number[i]);</span><br><span class="line">            count--;</span><br><span class="line">            <span class="keyword">if</span>(count!=<span class="number">0</span>) <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>PAT</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>PAT-B1022 D进制的A+B</title>
+    <url>/2021/02/08/PAT-B1022-D%E8%BF%9B%E5%88%B6%E7%9A%84A-B/</url>
+    <content><![CDATA[<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>输入两个非负 10 进制整数 <em>A</em> 和 <em>B</em> (≤2^30−1)，输出 <em>A</em>+<em>B</em> 的 <em>D</em> (1&lt;<em>D</em>≤10)进制数。</p>
+<p>输入格式：</p>
+<p>输入在一行中依次给出 3 个整数 <em>A</em>、<em>B</em> 和 <em>D</em>。</p>
+<p>输出格式：</p>
+<p>输出 <em>A</em>+<em>B</em> 的 <em>D</em> 进制数。</p>
+<p>输入样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">123 456 8</span><br></pre></td></tr></table></figure>
+<p>输出样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1103</span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ul>
+<li>10进制转n进制，除n取余，逆序排列。</li>
+</ul>
+<h2 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Switch</span><span class="params">(<span class="keyword">int</span> n,<span class="keyword">int</span> d)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans[<span class="number">31</span>];</span><br><span class="line">    <span class="keyword">int</span> q=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">do</span>&#123;</span><br><span class="line">        q=n/d;</span><br><span class="line">        ans[i++]=n%d;</span><br><span class="line">        n=n/d;</span><br><span class="line">    &#125;<span class="keyword">while</span>(q!=<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=i<span class="number">-1</span>;j&gt;=<span class="number">0</span>;j--) <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,ans[j]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a,b,d;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d %d %d&quot;</span>,&amp;a,&amp;b,&amp;d);</span><br><span class="line">    <span class="keyword">int</span> sum=a+b;</span><br><span class="line">    Switch(sum,d);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>PAT</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>PAT-B1023 组个最小数</title>
+    <url>/2021/02/08/PAT-B1023-%E7%BB%84%E4%B8%AA%E6%9C%80%E5%B0%8F%E6%95%B0/</url>
+    <content><![CDATA[<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定数字 0-9 各若干个。你可以以任意顺序排列这些数字，但必须全部使用。目标是使得最后得到的数尽可能小（注意 0 不能做首位）。例如：给定两个 0，两个 1，三个 5，一个 8，我们得到的最小的数就是 10015558。</p>
+<p>现给定数字，请编写程序输出能够组成的最小的数。</p>
+<p>输入格式：</p>
+<p>输入在一行中给出 10 个非负整数，顺序表示我们拥有数字 0、数字 1、……数字 9 的个数。整数间用一个空格分隔。10 个数字的总个数不超过 50，且至少拥有 1 个非 0 的数字。</p>
+<p>输出格式：</p>
+<p>在一行中输出能够组成的最小的数。</p>
+<p>输入样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2 2 0 0 0 3 0 0 1 0</span><br></pre></td></tr></table></figure>
+<p>输出样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">10015558</span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ul>
+<li>用数组存放个位数字出现的次数</li>
+<li>遍历数组，找到第一个下标不为0，且次数不为0的数字，输出同时将其次数-1</li>
+<li>遍历数组，从小到大依次输出，次数遍的下标</li>
+</ul>
+<h2 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> num[<span class="number">10</span>]=&#123;<span class="number">0</span>&#125;;<span class="comment">//下标是个位数字，值是其出现次数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++) <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>,&amp;num[i]);</span><br><span class="line">    <span class="keyword">int</span> p=<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(num[i]!=<span class="number">0</span>&amp;&amp;i!=<span class="number">0</span>)&#123;</span><br><span class="line">            p=i;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,p);</span><br><span class="line">    num[p]--;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;num[i];j++)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>PAT</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>PAT-B1024 科学计数法</title>
+    <url>/2021/02/09/PAT-B1024-%E7%A7%91%E5%AD%A6%E8%AE%A1%E6%95%B0%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>科学计数法是科学家用来表示很大或很小的数字的一种方便的方法，其满足正则表达式<code>[+-][1-9]</code>.<code>[0-9]+E[+-][0-9]+</code>，即数字的整数部分只有 1 位，小数部分至少有 1 位，该数字及其指数部分的正负号即使对正数也必定明确给出。</p>
+<p>现以科学计数法的格式给出实数 <em>A</em>，请编写程序按普通数字表示法输出 <em>A</em>，并保证所有有效位都被保留。</p>
+<p>输入格式：</p>
+<p>每个输入包含 1 个测试用例，即一个以科学计数法表示的实数 <em>A</em>。该数字的存储长度不超过 9999 字节，且其指数的绝对值不超过 9999。</p>
+<p>输出格式：</p>
+<p>对每个测试用例，在一行中按普通数字表示法输出 <em>A</em>，并保证所有有效位都被保留，包括末尾的 0。</p>
+<p>输入样例 1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+1.23400E-03</span><br></pre></td></tr></table></figure>
+<p>输出样例 1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0.00123400</span><br></pre></td></tr></table></figure>
+<p>输入样例 2：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-1.2E+10</span><br></pre></td></tr></table></figure>
+<p>输出样例 2：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-12000000000</span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ol>
+<li><p>用字符数组str[10000]存储科学计数法表示的数字。若str[0]==‘-’，则输出‘-’。</p>
+</li>
+<li><p>求出数组长度后，遍历数组用pos记录E的位置，这样易于识别E之前的小数部分，与E之后的指数部分。</p>
+</li>
+<li><p>计算指数exp，遍历指数部分(符号除外)，EXP=EXP*10+(str[i]-‘0’)。</p>
+</li>
+<li><p>根据exp，分情况输出。<br> 4.1 exp==0，直接输出E之前的数字部分即可。</p>
+</li>
+<li><p>2 exp&lt;0,这种情况一定输出的是0.00…0xxx，其中小数点后连续0的个数为exp-1(1为整数部分前的一位)，而     xxx部分即为E前面的数字。</p>
+</li>
+<li><p>3 exp&gt;0,也分3种情况，1小数点向后移动但依旧存在，2小数点恰好在整个数的最右边不需要输出，3需要添加额为的0。</p>
+</li>
+</ol>
+<h2 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">char</span> str[<span class="number">10000</span>];</span><br><span class="line"><span class="keyword">int</span> pos=<span class="number">0</span>,<span class="built_in">exp</span>=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>,str);</span><br><span class="line">	<span class="keyword">int</span> len=<span class="built_in">strlen</span>(str);</span><br><span class="line">	<span class="keyword">if</span>(str[<span class="number">0</span>]==<span class="string">&#x27;-&#x27;</span>) <span class="built_in">printf</span>(<span class="string">&quot;-&quot;</span>);</span><br><span class="line">	<span class="comment">//       pos</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;len;i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(str[i]==<span class="string">&#x27;E&#x27;</span>)&#123;</span><br><span class="line">			pos=i;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//        exp</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=pos+<span class="number">2</span>;i&lt;len;i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(str[i]&gt;=<span class="string">&#x27;0&#x27;</span>&amp;&amp;str[i]&lt;=<span class="string">&#x27;9&#x27;</span>)&#123;</span><br><span class="line">			<span class="built_in">exp</span>=<span class="built_in">exp</span>*<span class="number">10</span>+(str[i]-<span class="string">&#x27;0&#x27;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//         exp==0  </span></span><br><span class="line">	<span class="keyword">if</span>(<span class="built_in">exp</span>==<span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;pos;i++)&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;%c&quot;</span>,str[i]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//        exp==-</span></span><br><span class="line">	<span class="keyword">if</span>(str[pos+<span class="number">1</span>]==<span class="string">&#x27;-&#x27;</span>)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;0.&quot;</span>);</span><br><span class="line">		<span class="comment">// printf  extra 0</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="built_in">exp</span><span class="number">-1</span>;i++)&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// pritf number</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;pos;i++)&#123;</span><br><span class="line">			<span class="keyword">if</span>(str[i]!=<span class="string">&#x27;.&#x27;</span>)&#123;</span><br><span class="line">				<span class="built_in">printf</span>(<span class="string">&quot;%c&quot;</span>,str[i]);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123; <span class="comment">//exp==+</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;pos;i++)&#123;</span><br><span class="line">			<span class="keyword">if</span>(str[i]==<span class="string">&#x27;.&#x27;</span>) <span class="keyword">continue</span>;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;%c&quot;</span>,str[i]);</span><br><span class="line">			<span class="keyword">if</span>(i==<span class="built_in">exp</span>+<span class="number">2</span>&amp;&amp;pos<span class="number">-3</span>!=<span class="built_in">exp</span>)&#123;</span><br><span class="line">				<span class="built_in">printf</span>(<span class="string">&quot;.&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="built_in">exp</span>-(pos<span class="number">-3</span>);i++)&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>PAT</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>PAT-B1025 反转链表</title>
+    <url>/2021/02/09/PAT-B1025-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</url>
+    <content><![CDATA[<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定一个常数 <em>K</em> 以及一个单链表 <em>L</em>，请编写程序将 <em>L</em> 中每 <em>K</em> 个结点反转。例如：给定 <em>L</em> 为 1→2→3→4→5→6，<em>K</em> 为 3，则输出应该为 3→2→1→6→5→4；如果 <em>K</em> 为 4，则输出应该为 4→3→2→1→5→6，即最后不到 <em>K</em> 个元素不反转。</p>
+<p>输入格式：</p>
+<p>每个输入包含 1 个测试用例。每个测试用例第 1 行给出第 1 个结点的地址、结点总个数正整数 N (≤10^5 )、以及正整数 K (≤N)，即要求反转的子链结点的个数。结点的地址是 5 位非负整数，NULL 地址用 −1 表示。</p>
+<p>接下来有 N 行，每行格式为：</p>
+<p>Address <strong>Data</strong> <strong>Next</strong></p>
+<p>其中 <code>Address</code> 是结点地址，<code>Data</code> 是该结点保存的整数数据，<code>Next</code> 是下一结点的地址。</p>
+<p>输出格式：</p>
+<p>对每个测试用例，顺序输出反转后的链表，其上每个结点占一行，格式与输入相同。</p>
+<p>输入样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">00100 6 4</span><br><span class="line">00000 4 99999</span><br><span class="line">00100 1 12309</span><br><span class="line">68237 6 -1</span><br><span class="line">33218 3 00000</span><br><span class="line">99999 5 68237</span><br><span class="line">12309 2 33218</span><br></pre></td></tr></table></figure>
+<p>输出样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">00000 4 33218</span><br><span class="line">33218 3 12309</span><br><span class="line">12309 2 00100</span><br><span class="line">00100 1 99999</span><br><span class="line">99999 5 68237</span><br><span class="line">68237 6 -1</span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ul>
+<li>因地址是5位整数，方便起见，使用静态链表存储链表。</li>
+<li>为了反转方便，额外用数组存储地址，存储的同时剔除无效地址，并统计有效地址个数。</li>
+</ul>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ul>
+<li>考虑无效结点的存在</li>
+<li>地址-1输出时，格式与其他地址不同，需分开考虑。</li>
+</ul>
+<h2 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//静态链表</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> data;</span><br><span class="line">    <span class="keyword">int</span> next;</span><br><span class="line">&#125;node[<span class="number">100001</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> address[<span class="number">100001</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> start,n,k;<span class="comment">//起始地址，总结点个数(包括无效结点)，反转结点个数</span></span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d %d %d&quot;</span>,&amp;start,&amp;n,&amp;k);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">        <span class="keyword">int</span> temp;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>,&amp;temp);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d %d&quot;</span>,&amp;node[temp].data,&amp;node[temp].next);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(start!=<span class="number">-1</span>)&#123;</span><br><span class="line">        address[count++]=start;</span><br><span class="line">        start=node[start].next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;(count-count%k);i+=k)&#123;</span><br><span class="line">        reverse(begin(address)+i,begin(address)+i+k);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;count<span class="number">-1</span>;i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%05d %d %05d\n&quot;</span>,address[i],node[address[i]].data,address[i+<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%05d %d -1&quot;</span>,address[count<span class="number">-1</span>],node[address[count<span class="number">-1</span>]].data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>PAT</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>PAT-B1026 程序运行时间</title>
+    <url>/2021/02/10/PAT-B1026-%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/</url>
+    <content><![CDATA[<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>要获得一个 C 语言程序的运行时间，常用的方法是调用头文件 time.h，其中提供了 clock() 函数，可以捕捉从程序开始运行到 clock() 被调用时所耗费的时间。这个时间单位是 clock tick，即“时钟打点”。同时还有一个常数CLK_TCK，给出了机器时钟每秒所走的时钟打点数。于是为了获得一个函数 <em>f</em> 的运行时间，我们只要在调用 <em>f</em> 之前先调用 clock()，获得一个时钟打点数 C1；在 <em>f</em> 执行完成后再调用 clock()，获得另一个时钟打点数 C2；两次获得的时钟打点数之差 (C2-C1) 就是 <em>f</em> 运行所消耗的时钟打点数，再除以常数 CLK_TCK，就得到了以秒为单位的运行时间。</p>
+<p>这里不妨简单假设常数 CLK_TCK 为 100。现给定被测函数前后两次获得的时钟打点数，请你给出被测函数运行的时间。</p>
+<p>输入格式：</p>
+<p>输入在一行中顺序给出 2 个整数 C1 和 C2。注意两次获得的时钟打点数肯定不相同，即 C1 &lt; C2，并且取值在 [0,10^7]。</p>
+<p>输出格式：</p>
+<p>在一行中输出被测函数运行的时间。运行时间必须按照 <code>hh:mm:ss</code>（即2位的 <code>时:分:秒</code>）格式输出；不足 1 秒的时间四舍五入到秒。</p>
+<p>输入样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">123 4577973</span><br></pre></td></tr></table></figure>
+<p>输出样例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">12:42:59</span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ul>
+<li>将时钟打点数之差除以常数 CLK_TCK，获得秒数后，以标准时间格式输出即可。</li>
+</ul>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ul>
+<li>题目给出的时钟打点数皆为整数，相减后必须乘以1.0化为浮点数。</li>
+</ul>
+<h2 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> CLK_TCK=<span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> amount,start,over;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d %d&quot;</span>,&amp;start,&amp;over);</span><br><span class="line">    amount=round(((over-start)*<span class="number">1.0</span>)/CLK_TCK);</span><br><span class="line">    <span class="keyword">int</span> h=<span class="number">0</span>,m=<span class="number">0</span>,s=<span class="number">0</span>;</span><br><span class="line">    h=amount/<span class="number">3600</span>;</span><br><span class="line">    m=(amount%<span class="number">3600</span>)/<span class="number">60</span>;</span><br><span class="line">    s=(amount%<span class="number">3600</span>)%<span class="number">60</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%02d:%02d:%02d&quot;</span>,h,m,s);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>PAT</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>PAT-B1027 打印沙漏</title>
+    <url>/2021/02/17/PAT-B1027-%E6%89%93%E5%8D%B0%E6%B2%99%E6%BC%8F/</url>
+    <content><![CDATA[<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>本题要求你写个程序把给定的符号打印成沙漏的形状。例如给定17个“*”，要求按下列格式打印</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">*****</span><br><span class="line"> ***</span><br><span class="line">  *</span><br><span class="line"> ***</span><br><span class="line">*****</span><br></pre></td></tr></table></figure>
+<p>所谓“沙漏形状”，是指每行输出奇数个符号；各行符号中心对齐；相邻两行符号数差2；符号数先从大到小顺序递减到1，再从小到大顺序递增；首尾符号数相等。</p>
+<p>给定任意N个符号，不一定能正好组成一个沙漏。要求打印出的沙漏能用掉尽可能多的符号。</p>
+<p>输入格式:</p>
+<p>输入在一行给出1个正整数N（≤1000）和一个符号，中间以空格分隔。</p>
+<p>输出格式:</p>
+<p>首先打印出由给定符号组成的最大的沙漏形状，最后在一行中输出剩下没用掉的符号数。</p>
+<p>输入样例:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">19 *</span><br></pre></td></tr></table></figure>
+<p>输出样例:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">*****</span><br><span class="line"> ***</span><br><span class="line">  *</span><br><span class="line"> ***</span><br><span class="line">*****</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ul>
+<li>整个沙漏可以分为3个部分，中间一行和上下对称的两部分。</li>
+<li>上下两部分的符号个数，符合首项为3和等差为2的等差数列，借此可以推算出沙漏总符号数的公式:2l(l+2)+1其中l=0.1.2.3…（l代表扩展出去的行数）</li>
+<li>先输出上半部分，对于每一行，先输出row-i个空格，再输出2i+1个符号，row是扩展出去的行数，2i+1是等差数列的通项。</li>
+<li>对于中间一行，row个空格和一个符号。</li>
+<li>下半部分与上半部分对称，输出类似。</li>
+</ul>
+<h2 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;               <span class="comment">//符号总数</span></span><br><span class="line">    <span class="keyword">char</span> c;              <span class="comment">//符号</span></span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d %c&quot;</span>,&amp;n,&amp;c);</span><br><span class="line">    <span class="keyword">int</span> l=<span class="number">0</span>;             <span class="comment">//沙漏上半部分行数+1</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">2</span>*l*(l+<span class="number">2</span>)+<span class="number">1</span>&lt;n) l++; <span class="comment">//2*l*(l+2)+1 是沙漏符号总数</span></span><br><span class="line">    <span class="keyword">if</span>(n&gt;<span class="number">1</span>) l--;</span><br><span class="line">    <span class="keyword">int</span> r=n-(<span class="number">2</span>*l*(l+<span class="number">2</span>)+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">int</span> row=l;           <span class="comment">//沙漏扩展出去的行数</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=row; i&gt;=<span class="number">1</span>; i--)   <span class="comment">//输出上半部分</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>; j&lt;=row-i; j++) <span class="built_in">printf</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>; j&lt;=<span class="number">2</span>*i+<span class="number">1</span>; j++) <span class="built_in">printf</span>(<span class="string">&quot;%c&quot;</span>,c);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;=row; i++) <span class="built_in">printf</span>(<span class="string">&quot; &quot;</span>);<span class="comment">//输出中间一行</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%c\n&quot;</span>,c);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;=row; i++)   <span class="comment">//输出下半部分</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>; j&lt;=row-i; j++) <span class="built_in">printf</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>; j&lt;=<span class="number">2</span>*i+<span class="number">1</span>; j++) <span class="built_in">printf</span>(<span class="string">&quot;%c&quot;</span>,c);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,r);             <span class="comment">//输出多余符号数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>PAT</category>
+      </categories>
+  </entry>
 </search>
